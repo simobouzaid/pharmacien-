@@ -143,6 +143,15 @@ class db
         return $result; 
       }
     
+// -----------------partie client -----------------------
 
+
+// l'insertion  les produit de client qui faire le credit
+
+public function ajoutercredit($nom,$id,$medicament_id,$valider){
+    $sql=$this->pdo->prepare('INSERT INTO credit (nomclient,id_pharmacie,id_products ,valider) values(?,?,?,?)');
+    $sql->execute([$nom,$id,$medicament_id,$valider]);
+
+}
 
 }

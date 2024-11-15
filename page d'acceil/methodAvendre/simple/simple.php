@@ -59,7 +59,7 @@ if (isset($_POST['valider'])) {
 }
 
 if (isset($_POST['credits'])) {
-    header("location:client.php");
+    header("location:../client/client.php?id=$id_phar");
     exit;
 }
 
@@ -88,9 +88,7 @@ if (isset($ids)) {
         }
     }
     ?>
-    <form action="" method="post">
-        <input type="submit" name="effacer" value="Effacer">
-    </form>
+   
     <li>Le total: <?= number_format($sum, 2) ?> dh</li>
     <form action="" method="post">
         <input type="submit" value="Valider" name="valider">
