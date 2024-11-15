@@ -118,6 +118,8 @@ if (!empty($_SESSION['cherche'])) {
 </head>
 <body>
     <h1>Recherche</h1>
+  
+
     <form action="" method="post">
         <input type="text" name="query">
         <input type="submit" value="Recherche" name="recherche">
