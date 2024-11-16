@@ -63,6 +63,7 @@ if (isset($_POST['credits'])) {
     exit;
 }
 
+
 // عرض المنتجات المضافة ومعالجة العمليات
 if (isset($ids)) {
     $sum = 0;

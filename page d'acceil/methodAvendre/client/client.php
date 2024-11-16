@@ -1,5 +1,9 @@
 <?php
+
 session_start();
+if(!isset($_SESSION["id"])){
+    echo "ajouter une medicament   ";
+}
 if (empty($_SESSION['cxn'])) {
     header('location:../../../connexion/cxn.php');
     exit;
@@ -31,6 +35,7 @@ if (isset($_GET['id'])) {
 <body>
     <h1>ajouter un credits </h1>
     <?php $sum = 0;
+    if(!empty($medi)){   
     foreach ($medi as $medicaments) {
         $medical = str_replace(',', '.', $medicaments['ppv']);
 
@@ -46,10 +51,10 @@ if (isset($_GET['id'])) {
         </div>
 
 
-    <?php } ?>
+    <?php }} ?>
     <p> le total : <?= $sum ?> dh</p>
     <form action="credit.php" method="post">
-        <input type="hidden" name="id" value="<?= $id ?>">
+        <input type="hidden" name="id" value="<?= $id ?>" required>
         <input type="text" name="nom">
         <input type="submit" value="credit" name="credit">
 

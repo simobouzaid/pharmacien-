@@ -114,7 +114,8 @@ class db
            
 
 
-            $new_quantity =$q1  + $quantite_en_stock ;            /* --------------------------------------------------------------------------------------- */
+            $new_quantity =$q1  + $quantite_en_stock ;  
+          /* --------------------------------------------------------------------------------------- */
             $sql1=$this->pdo->prepare('UPDATE  stock SET quantite_en_stock=? WHERE  pharmacien_id=?	and produit_id	=?');
             $sql1->execute([ $new_quantity,$phi	,$pi]);
             return true;
@@ -148,9 +149,9 @@ class db
 
 // l'insertion  les produit de client qui faire le credit
 
-public function ajoutercredit($nom,$id,$medicament_id,$valider){
-    $sql=$this->pdo->prepare('INSERT INTO credit (nomclient,id_pharmacie,id_products ,valider) values(?,?,?,?)');
-    $sql->execute([$nom,$id,$medicament_id,$valider]);
+public function ajoutercredit($nom,$id,$medicament_id,$date_credit,$valider){
+    $sql=$this->pdo->prepare('INSERT INTO credit (nomclient,id_pharmacie,id_products,date_credit ,valider) values(?,?,?,?,?)');
+    $sql->execute([$nom,$id,$medicament_id,$date_credit,$valider]);
 
 }
 
