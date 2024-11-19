@@ -1,4 +1,16 @@
+<nav class="navbar">
+        
+
+            <a  href="../../index.php">page d'acceille</a>
+       
+</nav>
+
+
 <?php
+
+if(isset($_GET['credit'])){
+    echo"ajouter un medicament !!!";
+}
 include('../../../database/database.php');
 $db = new db();
 session_start();
@@ -7,7 +19,7 @@ $cmpt = 1;
 $yws = $_SESSION['cxn'];
 $id_phar = $yws[0]['pharmacien_id'];
 
-// إعداد المتغيرات
+
 $cherche = null;
 $vendre = null;
 
@@ -22,27 +34,10 @@ if (!isset($_SESSION['id'])) {
 
 $ids = $_SESSION['id'];
 
-// إضافة المنتج إلى الجلسة
-if (isset($_POST['ajouter'])) {
-    $id = $_POST['id'];
-    $stock = $db->testStock($id_phar, $id);
 
-    if ($stock) {
-        $_SESSION['id'][] = $id;
-    } else {
-        echo 'Votre produit n\'est pas trouvé dans le stock';
-    }
-}
 
-// حذف المنتج من الجلسة
-if (isset($_POST['effacer'])) {
-    $delete_id = $_POST['delete_id'];
-    if (($key = array_search($delete_id, $_SESSION['id'])) !== false) {
-        unset($_SESSION['id'][$key]);
-    }
-}
 
-// معالجة تأكيد العملية لجميع الأدوية في الجلسة
+
 if (isset($_POST['valider'])) {
     foreach ($_SESSION['id'] as $product_id) {
         $cmpt--;
@@ -64,7 +59,6 @@ if (isset($_POST['credits'])) {
 }
 
 
-// عرض المنتجات المضافة ومعالجة العمليات
 if (isset($ids)) {
     $sum = 0;
     foreach ($ids as $i) {
@@ -76,7 +70,7 @@ if (isset($ids)) {
                     <li>Le nom : <?= htmlspecialchars($v['specialite']) ?>,
                         le prix : <?= htmlspecialchars($v['ppv']) ?> dh
                     </li>
-                    <form action="" method="post">
+                    <form action="suprimmerproduit.php" method="post">
                         <input type="hidden" name="delete_id" value="<?= htmlspecialchars($v['id']) ?>">
                         <input type="submit" name="effacer" value="effacer">
                     </form>
@@ -98,7 +92,6 @@ if (isset($ids)) {
     <?php
 }
 
-// البحث عن المنتجات وعرض النتائج
 if (isset($_POST['recherche'])) {
     $query = $_POST['query'];
     $_SESSION['cherche'] = $db->recherchesimple($query);
@@ -116,6 +109,7 @@ if (!empty($_SESSION['cherche'])) {
     <link rel="stylesheet" href="simple.css">
 </head>
 <body>
+
     <h1>Recherche</h1>
   
 
@@ -144,7 +138,7 @@ if (!empty($_SESSION['cherche'])) {
                                 <td><?= htmlspecialchars($res['presentation']) ?></td>
                                 <td><?= htmlspecialchars($res['ppv']) ?> dh</td>
                                 <td>
-                                    <form action="" method="post">
+                                    <form action="ajouterproduit.php" method="post">
                                         <input type="hidden" name="id" value="<?= htmlspecialchars($res['id']) ?>">
                                         <input type="submit" value="Ajouter" name="ajouter">
                                     </form>

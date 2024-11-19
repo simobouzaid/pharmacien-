@@ -3,6 +3,28 @@ body {
     margin: 20px;
     background-color: #f4f4f4;
 }
+.navbar {
+    background-color: #007BFF;
+    overflow: hidden;
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    background-color: #0056b3;
+}
+
+/* تنسيق الحاوية */
+.container {
+    padding: 20px;
+}
 
 form {
     margin-bottom: 20px;

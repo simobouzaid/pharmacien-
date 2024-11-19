@@ -63,3 +63,9 @@ if (isset($_GET['id'])) {
 </body>
 
 </html>
+<?php
+if(empty($sum)){
+    $cr='zero medicaments! ajouter medicament';
+    header("location:../simple/simple.php?credit=$cr");
+
+}

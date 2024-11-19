@@ -16,8 +16,8 @@ if (isset($_POST['recherche'])) {
 if(isset($_POST['ajouter'])){
     
    
-   $db->ajouterStock($idphar,$_POST['id'],$_POST['quantite']);
-
+   $etat=$db->ajouterStock($idphar,$_POST['id'],$_POST['quantite']);
+echo $etat;
 }
  ?>
 <!DOCTYPE html>
@@ -26,15 +26,26 @@ if(isset($_POST['ajouter'])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="simple.css">
+    <link rel="stylesheet" href="../acceil.css">
 
 </head>
 
 <body>
-    <form action="" method="post">
-        <input type="text" name="query">
-        <input type="submit" value="recherche" name="recherche">
-    </form>
+    <nav class="navbar">
+        <div align="center">
+
+            <a  href="../index.php">page d'acceille</a>
+        </div>
+        
+    </nav>
+    <h3 align="center">ajouter un stock  </h3>
+    <div align="center">
+
+        <form action="" method="post">
+            <input type="text" name="query" placeholder="ajouter un medicament">
+            <input type="submit" value="recherche" name="recherche">
+        </form>
+    </div>
     <div>
         <?php
 

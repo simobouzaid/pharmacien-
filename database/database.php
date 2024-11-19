@@ -102,40 +102,35 @@ class db
 
     //-------------------------------fin index
     // --------------stosk------------------------------------//
-    public function ajouterStock($pharmacien_id	,$produit_id	,$quantite_en_stock){
-        $sql=$this->pdo->prepare('SELECT quantite_en_stock FROM  stock WHERE  pharmacien_id=? and    produit_id	=?');
-        $pi=floatval($produit_id);
-         $phi=floatval($pharmacien_id);	
-
-        $sql->execute([$phi	,$pi]);
-        $q=$sql->fetch(PDO:: FETCH_ASSOC);
-        $q1=floatval($q['quantite_en_stock']);
-        if($q1>0){
-           
-
-
-            $new_quantity =$q1  + $quantite_en_stock ;  
-          /* --------------------------------------------------------------------------------------- */
-            $sql1=$this->pdo->prepare('UPDATE  stock SET quantite_en_stock=? WHERE  pharmacien_id=?	and produit_id	=?');
-            $sql1->execute([ $new_quantity,$phi	,$pi]);
-            return true;
-        }
-
-            else{ 
-                
-                return null;
+    public function ajouterStock($pharmacien_id, $produit_id, $quantite_en_stock) {
+        $sql = $this->pdo->prepare('SELECT quantite_en_stock FROM stock WHERE pharmacien_id = ? AND produit_id = ?');
+        $pi = floatval($produit_id);
+        $phi = floatval($pharmacien_id);    
+    
+        $sql->execute([$phi, $pi]);
+        $q = $sql->fetch(PDO::FETCH_ASSOC);
+    
+        if ($q) {
+            $q1 = floatval($q['quantite_en_stock']);
+            if ($q1 > 0) {
+                $new_quantity = $q1 + $quantite_en_stock;  
+                $sql1 = $this->pdo->prepare('UPDATE stock SET quantite_en_stock = ? WHERE pharmacien_id = ? AND produit_id = ?');
+                $sql1->execute([$new_quantity, $phi, $pi]);
+            } else { 
+                $sql = $this->pdo->prepare('INSERT INTO stock (pharmacien_id, produit_id, quantite_en_stock) VALUES (?, ?, ?)');
+                $sql->execute([$pharmacien_id, $produit_id, $quantite_en_stock]);
             }
+        } else {
+            $sql = $this->pdo->prepare('INSERT INTO stock (pharmacien_id, produit_id, quantite_en_stock) VALUES (?, ?, ?)');
+            $sql->execute([$pharmacien_id, $produit_id, $quantite_en_stock]);
+        }
     }
-    public function stock($pharmacien_id	,$produit_id	,$quantite_en_stock){
-        $sql=$this->pdo->prepare('INSERT INTO stock (pharmacien_id	,produit_id	,quantite_en_stock) values (?,?,?)');
-        $sql->execute([$pharmacien_id	,$produit_id	,$quantite_en_stock]);
-
-    }
-
+    
+  
 
     
 
-
+// ------------le produit et dans le stock ou non -----------------------------------------
 
     public function testStock($pharmacien_id, $produit_id) {
         $sql = $this->pdo->prepare('SELECT quantite_en_stock FROM stock WHERE pharmacien_id = ? AND produit_id = ?');
@@ -143,7 +138,7 @@ class db
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         return $result; 
       }
-    
+    // ------------------------fin la patie stockk---------------------------
 // -----------------partie client -----------------------
 
 

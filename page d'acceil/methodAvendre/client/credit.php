@@ -1,9 +1,7 @@
 <?php
 $id_medicament = null;
 session_start();
-if(!isset($_SESSION["id"])){
-    echo "ajouter une medicament   ";
-}
+
 $id_medicament = $_SESSION['id'];
 
 
@@ -28,4 +26,9 @@ if (isset($_POST['credit'])) {
         $db->ajoutercredit($nom,$id,$id_medicamentS,$date_credit,$valider);
     }
     header('location:../../index.php');
-}}
+}else{
+    echo "ajouter une medicament ";
+    
+
+}
+}

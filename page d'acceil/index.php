@@ -21,10 +21,10 @@ $cmpt=0;
 </head>
 <body>
     <nav class="navbar">
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
-        <a href="#">Contact</a>
+        <a href="stoks/stock.php">ajouter un stock</a>
+        <a href="#">le stock</a>
+       
+        <a href="../connexion/cxn.php">deconnexion</a>
     </nav>
 
     <div class="container">
