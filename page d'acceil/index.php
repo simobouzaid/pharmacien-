@@ -22,6 +22,7 @@ $cmpt=0;
 <body>
     <nav class="navbar">
         <a href="stoks/stock.php">ajouter un stock</a>
+        <a href="methodAvendre/client/afficherclient.Php">le credit de client</a>
         <a href="stoks/afficherStock.php">le stock</a>
        
         <a href="../connexion/cxn.php">deconnexion</a>

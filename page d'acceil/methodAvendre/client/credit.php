@@ -3,6 +3,8 @@ $id_medicament = null;
 session_start();
 
 $id_medicament = $_SESSION['id'];
+var_dump($id_medicament);
+
 
 
 
@@ -26,6 +28,7 @@ if (isset($_POST['credit'])) {
         $db->ajoutercredit($nom,$id,$id_medicamentS,$date_credit,$valider);
     $cmpt=0;
 }
+unset($_SESSION['id']);
     header('location:../../index.php');
 }else{
     echo "ajouter une medicament ";
@@ -33,3 +36,4 @@ if (isset($_POST['credit'])) {
 
 }
 }
+

@@ -59,7 +59,9 @@ class db
     /* afficher  le detail de medicament */
     public function afficherMedicament($id){
         $sql=$this->pdo->prepare('SELECT * FROM products where id=?');
-        $sql->execute([$id]);
+        $id1=floatval($id);
+
+        $sql->execute([$id1]);
         return $sql->fetchAll(PDO::FETCH_ASSOC);
 
     }//-------------------------fin
@@ -82,12 +84,19 @@ class db
 
     }
     // partie credit
-    public function creditClient(){
+    public function creditVALIDER($id_product,$nomclient,$id_pharmacie){
 
 
-        $sql=$this->pdo->prepare('');
-        $sql->execute([]);
+        $sql=$this->pdo->prepare('UPDATE credit set valider = 1 
+        where id_products=? and nomclient=? and id_pharmacie=?  ');
+        $sql->execute([$id_product,$nomclient,$id_pharmacie]);
 
+    }
+    public function affichercredit($id_phar){
+        $sql=$this->pdo->prepare("SELECT id,nomclient,specialite,dosage,forme,ppv,date_credit
+        from credit join products on credit.id_products=products.id where id_pharmacie = ? and valider = 0");
+        $sql->execute([$id_phar]);
+        return $sql->fetchAll(PDO:: FETCH_ASSOC);
     }
     //----------------------------fin client
     // -------------------index 
