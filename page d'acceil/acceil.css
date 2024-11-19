@@ -1,4 +1,5 @@
-/* تنسيق الجسم */
+
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -6,7 +7,6 @@ body {
     background-color: #f4f4f4;
 }
 
-/* تنسيق شريط التنقل */
 .navbar {
     background-color: #007BFF;
     overflow: hidden;
@@ -25,12 +25,10 @@ body {
     background-color: #0056b3;
 }
 
-/* تنسيق الحاوية */
 .container {
     padding: 20px;
 }
 
-/* تنسيق الأزرار والعناصر */
 input[type="submit"], select {
     padding: 10px;
     margin-top: 10px;

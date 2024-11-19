@@ -22,12 +22,12 @@ $cmpt=0;
 <body>
     <nav class="navbar">
         <a href="stoks/stock.php">ajouter un stock</a>
-        <a href="#">le stock</a>
+        <a href="stoks/afficherStock.php">le stock</a>
        
         <a href="../connexion/cxn.php">deconnexion</a>
     </nav>
 
-    <div class="container">
+    <div class="container" align="center">
         <form action="" method="post">
             <input type="submit" name="avent" value="Avendre">
             <?php if(isset($_POST['avent'])) { ?>
@@ -35,7 +35,7 @@ $cmpt=0;
                     <option value="cod_barre">Cod Barre</option>
                     <option value="simple">Simple</option>
                 </select>
-                <input type="submit" name="ok" value="Submit" style="display:block; margin-top:10px;">
+                <input type="submit" name="ok" value="ajouter method" style="display:block; margin-top:10px;" >
             <?php } ?>
         </form>
 

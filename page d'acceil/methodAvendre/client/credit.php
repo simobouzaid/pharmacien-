@@ -21,10 +21,11 @@ if (isset($_POST['credit'])) {
         $cmpt=0;
     foreach ($id_medicament as $id_medicamentS) {
         $cmpt--;
-        $db->ajouterStock($id,$id_medicamentS,$cmpt);
+        $db->vendeMedicament($id,$id_medicamentS,$cmpt);
 
         $db->ajoutercredit($nom,$id,$id_medicamentS,$date_credit,$valider);
-    }
+    $cmpt=0;
+}
     header('location:../../index.php');
 }else{
     echo "ajouter une medicament ";

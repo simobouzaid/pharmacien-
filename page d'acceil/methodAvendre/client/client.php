@@ -21,6 +21,9 @@ if (isset($_GET['id'])) {
         $medi = $db->afficherMedicament($im);
     }
 }
+
+
+var_dump($medi);
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +68,6 @@ if (isset($_GET['id'])) {
 </html>
 <?php
 if(empty($sum)){
-    $cr='zero medicaments! ajouter medicament';
-    header("location:../simple/simple.php?credit=$cr");
+        header("location:../simple/simple.php?credit=$cr");
 
 }

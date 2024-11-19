@@ -8,14 +8,12 @@
 
 <?php
 
-if(isset($_GET['credit'])){
-    echo"ajouter un medicament !!!";
-}
+
 include('../../../database/database.php');
 $db = new db();
 session_start();
 
-$cmpt = 1;
+$cmpt = 0;
 $yws = $_SESSION['cxn'];
 $id_phar = $yws[0]['pharmacien_id'];
 
@@ -41,13 +39,17 @@ $ids = $_SESSION['id'];
 if (isset($_POST['valider'])) {
     foreach ($_SESSION['id'] as $product_id) {
         $cmpt--;
-        $false = $db->ajouterStock($id_phar, $product_id, $cmpt);
-        if ($false != null) {
+        
+         $false=$db->vendeMedicament($id_phar, $product_id, $cmpt);
+        echo $false;
+       if ($false != false) {
             $db->validerClient($id_phar, $product_id);
         } else {
             echo 'Votre médicament n\'est pas disponible dans le stock';
         }
+        $cmpt=0;
     }
+  
     unset($_SESSION['id']);
     header('location:../../index.php');
     exit;

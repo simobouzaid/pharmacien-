@@ -125,6 +125,31 @@ class db
             $sql->execute([$pharmacien_id, $produit_id, $quantite_en_stock]);
         }
     }
+    public function vendeMedicament($pharmacien_id, $produit_id, $quantite_vendue) {
+        $pi = floatval($produit_id);
+        $phi = floatval($pharmacien_id);
+    
+        $sql = $this->pdo->prepare("SELECT quantite_en_stock FROM stock WHERE pharmacien_id = ? AND produit_id = ?");
+        $sql->execute([$phi, $pi]);
+        $stockLoncien = $sql->fetch(PDO::FETCH_ASSOC);
+    
+        if ($stockLoncien) {
+            $quantite_en_stock = floatval($stockLoncien['quantite_en_stock']);
+            
+            if ($quantite_en_stock >= $quantite_vendue) {
+                $new_quantity = $quantite_en_stock + $quantite_vendue;
+    
+                $sql = $this->pdo->prepare("UPDATE stock SET quantite_en_stock = ? WHERE pharmacien_id = ? AND produit_id = ?");
+                $sql->execute([$new_quantity, $phi, $pi]);
+                return true;
+            } else {
+                throw new Exception('Quantité vendue dépasse la quantité en stock');
+            }
+        } else {
+            throw new Exception('Produit non trouvé dans le stock');
+        }
+    }
+    
     
   
 
@@ -138,6 +163,17 @@ class db
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         return $result; 
       }
+      //----------------afficher le stock---------------------------
+      public function afficheStock($id_pharmacie){
+        $stm=$this->pdo->prepare('SELECT specialite,dosage,forme, quantite_en_stock FROM products join stock on stock.produit_id = products.id where pharmacien_id=?');
+         $stm->execute([$id_pharmacie]);
+         return $stm->fetchAll(PDO::FETCH_ASSOC);
+
+      }
+
+
+
+
     // ------------------------fin la patie stockk---------------------------
 // -----------------partie client -----------------------
 
