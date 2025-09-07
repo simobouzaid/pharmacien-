@@ -11,8 +11,8 @@ export default function layout() {
             <main>
                 <Outlet />
             </main>
-            <footer>
-           <p className="bg-amber-200 text-center"> 2025</p>
+            <footer className="flex flex-col justify-end">
+           <p className="bg-amber-300 text-center "> 2025</p>
             </footer>
         </>
     )
