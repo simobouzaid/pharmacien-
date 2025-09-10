@@ -1,18 +1,19 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
-
+import  { Link, useNavigate, type NavigateFunction } from "react-router-dom";
+import { api } from "../../api/api";
+ 
 
 function Login() {
    document.title='login'
+   const nav:NavigateFunction =useNavigate()
     const email = useRef<HTMLInputElement>(null);
     const password =  useRef<HTMLInputElement>(null);
     const [errorEmail, setErrorEmail] = useState<string>();
     const [errorPassword, setErrorPassword] = useState<string>();
     // const [test,setTest] =useState<boolean>(); 
-
-
+          
 // Si le champ e-mail est vide, il faut afficher un message d'erreur.Si le champ e-mail est vide, il faut afficher un message d'erreur.
-    const handlErrorEmail = () => {
+    const handlErrorEmail:()=>void = () => {
     
         if (email.current?.value.length === 0) {
             setErrorEmail('l\' e-mail est vite ');
@@ -23,7 +24,7 @@ function Login() {
 
     }
 // Si le champ password est vide, il faut afficher un message d'erreur.Si le champ e-mail est vide, il faut afficher un message d'erreur.
-    const handlErrorPassword =()=>{
+    const handlErrorPassword:()=>void =()=>{
   if (password.current?.value.length === 0) {
             setErrorPassword('le password est vite');
         }else{
@@ -33,10 +34,46 @@ function Login() {
 
   
 // envoyer les donner dans serveur
-const handlSubmit =(e: React.MouseEvent<HTMLInputElement>)=>{
+const handlSubmit:(e: React.MouseEvent<HTMLInputElement>)=>void =async(e)=>{
 e.preventDefault()
  
-  
+   if (password.current?.value.length === 0) {
+            setErrorPassword('le password est vite');
+        }else{
+            setErrorPassword('')
+        }
+          if (email.current?.value.length === 0) {
+            setErrorEmail('l\' e-mail est vite ');
+        }else{
+            setErrorEmail('')
+        }
+
+       if (errorEmail == '' && errorPassword =='') {
+             
+
+              const res =await api.post('/login',{
+                email:email.current?.value,
+                password:password.current?.value,
+              });
+
+              console.log(res.data)
+              if (res.data?.status) {
+                localStorage.setItem('token',res.data?.token)
+                console.log(localStorage.getItem('token'))
+                nav('/')
+              }
+
+              if (!res.data?.status) {
+                setErrorEmail('email ou mot de pass incorret')
+                setErrorPassword('email ou mot de pass incorret')
+                
+              }else{
+                setErrorEmail('')
+                setErrorPassword('')
+              }
+       }
+
+
 }
 
     return (

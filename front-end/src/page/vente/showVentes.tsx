@@ -25,7 +25,7 @@ const ShowVentes = () => {
       <td className="px-4 py-2 border-b border-yellow-300">07-09-2025</td>
       <td className="px-4 py-2 border-b border-yellow-300">07-09-2025</td>
       <td className="px-4 py-2 border-b border-yellow-300">07-09-2025</td>
-      <td className="px-4 py-2 border-b border-yellow-300"><button>suprimmer</button></td>
+      <td className="px-4 py-2 border-b border-yellow-300"><button className="bg-red-500 px-2 py-1 text-white rounded-xl hover:bg-red-600 transition duration-300">suprimmer</button></td>
     </tr>
    
   </tbody>
