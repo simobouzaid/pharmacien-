@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Json from './produit.json';
+import { api } from '../../api/api';
+import { useNavigate } from 'react-router-dom';
+import { EchecAlert, SuccessAlert } from '../../components/validateAlert';
 
 type produitType = {
     nom: string,
@@ -10,18 +13,15 @@ type produitType = {
     presentation: string
 
 }
-type stockType = {
-    nom: string,
-    dosage1: string | null,
-    forme: string,
-    uniteDosage1: string,
-    ppv: number,
-    presentation: string,
-    stock: number
 
-}
 function ProduitJson() {
-
+    const token = localStorage.getItem('token');
+    const nav = useNavigate()
+    if (!token) {
+        nav('/login')
+    }
+    const [alertSuccess,setAlertSuccess] =useState<boolean>()
+    const [alertEcheck,setAlertEcheck] =useState<boolean>()
     const recherche = useRef<HTMLInputElement | null>(null)
     const [produit, setProduit] = useState<produitType[]>([]);
     const [produitAll, setProduitAll] = useState<produitType[]>([]);
@@ -65,8 +65,37 @@ const rechercheProduit =()=>{
 
 
 
-    const ajouterStock = (data: stockType) => {
-        console.log(data)
+    const ajouterProduit = async(data: produitType) => {
+       
+       
+            await api.post('/produit',{
+            name:data.nom,
+            prix:data.ppv,
+            form:data.forme,
+            presentation:data.presentation,
+            dosage:data.dosage1+data.uniteDosage1
+            },{
+                headers:{
+                    Authorization:`bearer ${token}`
+                }
+            }).then((response)=>{
+                console.log(response.data)
+                if (response.data?.status) {
+                    setAlertSuccess(true)
+
+                    setTimeout(() => {
+                        setAlertSuccess(false)
+                    }, 2000);
+                }
+                if (!response.data?.status) {
+                    setAlertEcheck(true)
+
+                    setTimeout(() => {
+                        setAlertEcheck(false)
+                    }, 2000);
+                }
+            })
+       
     }
     useEffect(() => {
         document.title = ' les produits'
@@ -83,6 +112,11 @@ const rechercheProduit =()=>{
     }, [increment1, increment2])
     return (
         <div>
+
+
+            {alertSuccess && <SuccessAlert msg="le produit a ete ajouter " />}
+            {alertEcheck && <EchecAlert msg="le produit deja ajoueter " />}
+            
             <h3 className='text-2xl text-center font-black'>les produits</h3>
             <div className='flex '>
 
@@ -112,9 +146,9 @@ const rechercheProduit =()=>{
                 </thead>
                 <tbody>
 
-                    {produit.map((item) => (
+                    {produit.map((item,index) => (
 
-                        <tr className="bg-yellow-100 hover:bg-yellow-200">
+                        <tr className="bg-yellow-100 hover:bg-yellow-200" key={index+1}>
                             <td className="px-4 py-2 border-b border-yellow-300">{item.nom}</td>
                             <td className="px-4 py-2 border-b border-yellow-300">{item.ppv} dh</td>
                             <td className="px-4 py-2 border-b border-yellow-300">{item.forme}</td>
@@ -122,14 +156,14 @@ const rechercheProduit =()=>{
                             <td className="px-4 py-2 border-b border-yellow-300">{item.dosage1 + item.uniteDosage1}</td>
                             <td className="px-4 py-2 border-b border-yellow-300">
                                 <button className='bg-green-500 px-2 rounded-2xl text-white hover:bg-green-400 transition duration-300 '
-                                    onClick={() => ajouterStock({
+                                    onClick={() => ajouterProduit({
                                         nom: item.nom,
                                         dosage1: item.dosage1,
                                         forme: item.forme,
                                         uniteDosage1: item.uniteDosage1,
                                         ppv: item.ppv,
                                         presentation: item.presentation,
-                                        stock: 12
+                                      
                                     })}
                                 >ajouter le produit</button>
                             </td>

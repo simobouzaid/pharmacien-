@@ -4,7 +4,7 @@ import { Link, useNavigate, type NavigateFunction } from 'react-router-dom';
 import { api } from '../../api/api';
 
 const Register = () => {
-       document.title='register'
+    document.title = 'register'
 
     const nav: NavigateFunction = useNavigate()
     const nameRef = useRef<HTMLInputElement>(null)

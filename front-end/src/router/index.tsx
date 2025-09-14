@@ -5,8 +5,9 @@ import Login from "../page/auth/Login";
 import Register from "../page/auth/Register";
 import Stock from './../page/stock/stock';
 import Produit from "../page/produit/produit";
-import Vente from "../page/vente/vente";
+import Vente from "../page/vente/Vente";
 import ShowVentes from "../page/vente/showVentes";
+import AjouterStock from "../page/stock/AjouterStock";
 
 export const router =createBrowserRouter([
     {
@@ -34,6 +35,12 @@ export const router =createBrowserRouter([
         {
         element:<ShowVentes />,
         path:"/showVentes"
+    },
+    
+    
+        {
+        element:<AjouterStock />,
+        path:"/AjouterStock"
     },
 
 

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('form');
             $table->string('presentation');
             $table->string('dosage');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
