@@ -2,16 +2,12 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react"
 import BarreNavStock from "./barreNavStock"
 import { api } from "../../api/api"
 import { useNavigate } from "react-router-dom"
-import type { produitType } from "../../type/type";
+import type { produitType,produitResponse } from "../../type/type";
 import IncrementBarre from "../../components/IcrementBarre";
 import Nprogress from 'nprogress'
 import "nprogress/nprogress.css";
 import { EchecAlert, SuccessAlert } from "../../components/validateAlert";
-type produitResponse = {
-  get_produit: produitType
-  number: number
-  id?: number
-}
+  
 export default function Stock() {
 
   document.title = 'stock'
@@ -20,7 +16,6 @@ export default function Stock() {
   const [valider, setValider] = useState<boolean>(false);
   const [echec, setEchec] = useState<boolean>(false);
   const [produit, setProduit] = useState<produitType[]>([]);
-  const [produitSearch, setProduitSeache] = useState<produitType[]>([]);
   const [last_page, setLastPage] = useState<number>(1);
   const [numberOfpage, setNumberOfPage] = useState<number>(1);
   const numberOfStock = useRef<HTMLInputElement>(null)
@@ -37,17 +32,34 @@ export default function Stock() {
   }
   //-----------------------------
   // le recherche a produit
-  const handelSeach = (e: ChangeEvent<HTMLInputElement>) => {
+  const handelSeach = async(e: ChangeEvent<HTMLInputElement>) => {
     const value = (e.currentTarget.value).toLowerCase()
-    if (value.length === 0) {
-      setProduit(produitSearch)
-    } else {
+    if (value.length > 0) {
 
-      const response: produitType[] = produitSearch.filter((item) => {
-        return item.name.toLowerCase().includes(value)
+      // const response: produitType[] = produitSearch.filter((item) => {
+      //   return item.name.toLowerCase().includes(value)
+      // })
+  await api.get(`/stockProduitsearch?name=${value}`,{headers:{
+        Authorization:`bearer ${localStorage.getItem('token')}`
+      }}).then((response)=>{
+        console.log(response.data.produits)
+        if (response.data.status) {
+          
+          const data : produitType[]= (response.data.produits).map((item:produitType)=>({
+            name:item.name,
+            prix:item.prix,
+            form:item.form,
+            presentation:item.presentation,   
+            dosage:item.dosage,   
+            id:item.id,   
+            number:item.number
+           ,idStock:item.idStock
+            
+          }))
+          setProduit(data)
+        }
+
       })
-      setProduit(response)
-
     }
 
   }
@@ -82,7 +94,6 @@ export default function Stock() {
 
 
       setProduit(produitNEw)
-      setProduitSeache(produitNEw)
 
     }
     getProduitEnStock()
@@ -92,6 +103,7 @@ export default function Stock() {
     if (numberOfStock.current) {
       const number: number = Number(numberOfStock.current.value)
       if (number > 0) {
+        console.log(idStock)
         Nprogress.start()
         await api.put(`/stock/${idStock}`, {
           produit_id: produit_id,
@@ -130,7 +142,7 @@ export default function Stock() {
     <BarreNavStock />
     <IncrementBarre increment={increment} decrement={decrement} rechercheProduit={handelSeach} numberOfpage={numberOfpage} lastPage={last_page} />
 
-    <div className="grid grid-cols-5 gap-4 mt-1 ">
+    <div className="grid md:grid-cols-4 lg:grid-cols-5 sm:grid-cols-3 gap-4 mt-1 ">
 
       {
         produit.map((item, index) => (
@@ -141,8 +153,11 @@ export default function Stock() {
             <h3>presentation : {item.presentation} </h3>
             <h3>dosage : {item.dosage} </h3>
             <h3>stock :{item.number} </h3>
+
+            <div className="flex flex-col  md:flex-row md:space-x-2 ">
+                  {/* modiffier le stock */}
             <button
-              className="bg-blue-500 mb-1 px-5 text-white rounded-xl py-1 hover:bg-blue-400 transition duration-300"
+              className="bg-blue-500 mb-1 px-4 text-white rounded-xl py-1 hover:bg-blue-400 transition duration-300"
               onClick={
                 () => {
                   setStatusModifier({
@@ -150,7 +165,15 @@ export default function Stock() {
                     status: true
                   })
                 }}>modiffier</button>
+                {/* suprimmer un stock */}
+            <button
+              className="bg-red-500 mb-1 px-4 text-white rounded-xl py-1 hover:bg-red-400 transition duration-300"
+              onClick={
+                () => {
+                  
+                }}>suprimer</button>
 
+                </div>
 
             {statusModifier.id === item.id &&
               <>

@@ -58,11 +58,9 @@ function Login() {
         password: password.current?.value,
       });
 
-      console.log(res.data)
       Nprogress.done();
       if (res.data?.status) {
         localStorage.setItem('token', res.data?.token)
-        console.log(localStorage.getItem('token'))
         nav('/')
       }
 

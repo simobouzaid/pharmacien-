@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class vente extends Model
 {
-    protected $fillable =['user_id','produit_id'];
+    protected $fillable =['user_id','produit_id','status'];
     public function get_produit(){
        return $this->belongsTo(produit::class,'produit_id');
     }

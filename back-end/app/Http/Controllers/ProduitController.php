@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\{produit, stock};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{Auth};
 
 class ProduitController extends Controller
 {
@@ -14,7 +14,12 @@ class ProduitController extends Controller
     public function index()
     {
         try {
-            $produits = produit::where('user_id', Auth::id())->paginate(50);
+            $produits = produit::where('user_id', Auth::id())
+                ->whereNotIn('id', function ($query) {
+                    $query->SELECT('produit_id')->from('stocks');
+                })
+                // ->whereRaw('produits.id NOT IN (SELECT stocks.produit_id FROM stocks)')
+                ->paginate(50);
 
             return response()->json([
                 'status' => true,
@@ -22,7 +27,8 @@ class ProduitController extends Controller
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'status' => false,$th
+                'status' => false,
+                $th
 
             ]);
         }
@@ -48,21 +54,21 @@ class ProduitController extends Controller
                 ]);
             }
 
-               produit::create([
-                'name'=>$request->name,
-                'prix'=> $request->prix,
-                'form'=> $request->form,
-                'presentation'=> $request->presentation,
-                'dosage'=> $request->dosage,
-                'user_id'=> Auth::id()
-        ]);
+            produit::create([
+                'name' => $request->name,
+                'prix' => $request->prix,
+                'form' => $request->form,
+                'presentation' => $request->presentation,
+                'dosage' => $request->dosage,
+                'user_id' => Auth::id()
+            ]);
 
-       return response()->json([ 'status' => true,]);
+            return response()->json(['status' => true,]);
         } catch (\Throwable $th) {
-             return response()->json([
-                    'status' => false,
-                    $th
-                ]);
+            return response()->json([
+                'status' => false,
+                $th
+            ]);
         }
     }
 

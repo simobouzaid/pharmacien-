@@ -13,13 +13,14 @@ import { EchecAlert, SuccessAlert } from "../../components/validateAlert";
 export default function AjouterStock() {
   document.title = 'stock'
   const token = localStorage.getItem('token')
+  const [show, setShow] = useState<{status:boolean,id:number}>({status:false,id:0});
   const nav = useNavigate()
-  const [valider,setValider] = useState<boolean>(false);
-  const [echec,setEchec] = useState<boolean>(false);
+  const [valider, setValider] = useState<boolean>(false);
+  const [echec, setEchec] = useState<boolean>(false);
   const [produit, setProduit] = useState<produitType[]>([]);
   const [produitSearch, setProduitSeache] = useState<produitType[]>([]);
   const [last_page, setLastPage] = useState<number>(1);
-const [numberOfStock,setNumberOfStock] = useState<number>(0);
+  const [numberOfStock, setNumberOfStock] = useState<number>(0);
   const [numberOfpage, setNumberOfPage] = useState<number>(1);
   if (!token) {
     nav('/login')
@@ -39,62 +40,74 @@ const [numberOfStock,setNumberOfStock] = useState<number>(0);
   }
   //-----------------------------
   // le recherche a produit
-  const handelSeach = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = (e.currentTarget.value || '').toLowerCase()
+  const handelSeach = async (e: ChangeEvent<HTMLInputElement>) => {
+    const value: string = (e.currentTarget.value || '').toLowerCase()
     if (value.length === 0) {
       setProduit(produitSearch)
     } else {
-
-      const response: produitType[] = produitSearch.filter((item) => {
-        return item.name.toLowerCase().includes(value)
+      const response = await api.get(`/searcheProduit?name=${value}`, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem('token')}`
+        }
       })
-      setProduit(response)
+      const data: produitType[] = (response.data.produits).map((item: produitType) => ({
+        name: item.name,
+        prix: item.prix,
+        presentation: item.presentation,
+        dosage: item.dosage,
+        form: item.form,
+        id: item.id
 
+      }));
+      setProduit(data)
     }
+
 
   }
 
 
   // ajouter produit en stock 
-  const handleChange :(e:ChangeEvent<HTMLInputElement>)=>void=(e)=>{
-  setNumberOfStock(Number(e.currentTarget.value))
+  const handleChange: (e: ChangeEvent<HTMLInputElement>) => void = (e) => {
+    setNumberOfStock(Number(e.currentTarget.value))
   }
 
-const handleProduit =async(produitId:number)=>{
+  const handleProduit = async (produitId: number) => {
 
-  if (numberOfStock > 0) {
-    
-    console.log(numberOfStock)
-    await api.post('/stock',{
-        number:numberOfStock
-        ,produitId:produitId
-      },{headers:{
-          Authorization:`bearer ${localStorage.getItem('token')}`
-        }}).then((response)=>{
-            console.log(response.data)
-            if (response.data.status) {
-              
-              setValider(true)
-            setTimeout(() => {
-              setValider(false)
-              
-            }, 2000);
-            }else{
-              alert('le produit deja en stock')
-            }
-          })
-          
-        }else{
-          setEchec(true)
-          setTimeout(() => {
-            setEchec(false)
-            
-          }, 2000);
+    if (numberOfStock > 0) {
+
+      console.log(numberOfStock)
+      await api.post('/stock', {
+        number: numberOfStock
+        , produitId: produitId
+      }, {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem('token')}`
         }
-      }
+      }).then((response) => {
+        console.log(response.data)
+        if (response.data.status) {
+
+          setValider(true)
+          setTimeout(() => {
+            setValider(false)
+
+          }, 2000);
+        } else {
+          alert('le produit deja en stock')
+        }
+      })
+
+    } else {
+      setEchec(true)
+      setTimeout(() => {
+        setEchec(false)
+
+      }, 2000);
+    }
+  }
 
 
-// -----------------------------------------------
+  // -----------------------------------------------
 
   useEffect(() => {
 
@@ -121,16 +134,16 @@ const handleProduit =async(produitId:number)=>{
       setProduitSeache(data)
     }
     getProduits()
-  }, [token, numberOfpage])
+  }, [token, numberOfpage, valider, echec])
 
   return (<>
     <h3 className="text-xl text-center font-black">les produit en stock</h3>
 
-    {valider && <SuccessAlert msg="ajouter avec success"/>}
+    {valider && <SuccessAlert msg="ajouter avec success" />}
     {echec && <EchecAlert msg="le nombre est vite" />}
-      <BarreNavStock />
+    <BarreNavStock />
     <IncrementBarre increment={increment} decrement={decrement} rechercheProduit={handelSeach} numberOfpage={numberOfpage} lastPage={last_page} />
-    <div className="grid grid-cols-5 gap-4 mt-1 ">
+    <div className="grid  sm:grid-cols-3  grid-cols-1     md:grid-cols-5 gap-4 mt-1 ">
 
       {
 
@@ -141,20 +154,27 @@ const handleProduit =async(produitId:number)=>{
             <h3 className="font-bold">{item.name}</h3>
             <h3>form : {item.form}</h3>
             <h3>dosage :{item.dosage} </h3>
-            <div   className="flex-grow">
+            <div className="flex-grow">
 
               <h3>presentation : {item.presentation}</h3>
             </div>
             <h3>prix: {item.prix} dh</h3>
 
 
+               { !show?.status &&
+                 <button className="bg-green-500  hover:bg-green-400  w-1/2 mx-2 text-white rounded-full mt-2 " onClick={() => setShow({status:true,id:item.id})}> ajouter au stock</button>
+                 
+              } 
+            {(show.status && show?.id === item.id ) &&
 
 
-            <div className="  flex flex-col w-50 px-1 shadow shadow-amber-200 py-2">
-              <input type="number" placeholder="le nombre de stock" onChange={(e:ChangeEvent<HTMLInputElement>)=>handleChange(e)} className="w-full text-xl text-center   outline-none focus:ring-2 focus:ring-yellow-500 border-gray-300" />
-              <button className="bg-green-500 text-xl text-white rounded-full mt-2 " onClick={()=>handleProduit( item.id)}> ajouter</button>
-            </div>
+              <div className="  flex flex-col w-50 px-1 space-y-2 items-center shadow shadow-amber-200 py-2">
+                <button className="bg-red-500 text-xl hover:bg-red-400  w-1/2 mx-2 text-white rounded-full mt-2 " onClick={() => setShow({status:false,id:0})}> x</button>
+                <input type="number" placeholder="le nombre de stock" onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)} className="w-full text-xl text-center   outline-none focus:ring-2 focus:ring-yellow-500 border-gray-300" />
+                <button className="bg-green-500 text-xl hover:bg-green-400  w-full  text-white rounded-full mt-2 " onClick={() => handleProduit(item.id)}> valider</button>
+              </div>
 
+            }
           </div>
         ))
       }

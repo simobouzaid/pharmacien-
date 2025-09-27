@@ -6,6 +6,20 @@ export type produitType ={
     form:string,
     prix:number,
     number?:number
-    idStock?:number
+    idStock?:number,
+    
 }
 
+export type produitResponse = {
+  get_produit: produitType
+  number?: number
+  id?: number
+}
+
+
+export type produitStockSearch =produitType&
+{
+  get_stock:{
+    number:number
+  }
+}

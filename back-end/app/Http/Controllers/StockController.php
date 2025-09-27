@@ -37,7 +37,7 @@ class StockController extends Controller
     {
         try {
             $produit = stock::where('produit_id', $request->produitId)->first();
-            if ($produit || $request->number > 0) {
+            if ($produit) {
 
                 return response()->json([
                     'status' => false,
